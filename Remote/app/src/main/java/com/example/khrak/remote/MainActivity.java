@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -23,15 +27,13 @@ public class MainActivity extends AppCompatActivity {
 
     private PrintWriter out = null;
 
-    private static final int SERVERPORT = 2222;
-    private static final String SERVER_IP = "192.168.0.102";
+    private static final int SERVERPORT = 2221;
+    private static final String SERVER_IP = "192.168.1.10";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        System.out.println("hello there");
 
         Button sendButton = (Button) findViewById(R.id.send_button);
 
@@ -76,10 +78,15 @@ public class MainActivity extends AppCompatActivity {
 
                     System.out.println("Sending");
 
-                    out.write(message + " Was written by Mamuka Sakhelashvili. Computer science Bachelor from " +
-                            " Free university of Tbilisi");
+                    out.println(message);
 
                     out.flush();
+
+                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+                    String reply = in.readLine();
+
+                    System.out.println(reply);
 
                 } catch (UnknownHostException e1) {
                     e1.printStackTrace();
